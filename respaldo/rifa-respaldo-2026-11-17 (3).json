@@ -1,0 +1,514 @@
+{
+  "version": 1,
+  "config": {
+    "title": "Rifa Solidaria",
+    "beneficiary": "Adolfo Quintero",
+    "prize": 200,
+    "price": 10,
+    "totalNumbers": 100,
+    "drawDate": "2026-12-12",
+    "rateBs": 100,
+    "rateCop": 4000
+  },
+  "persons": [
+    {
+      "id": "e1f4bbdb-8250-427f-8379-78293cf07382",
+      "name": "adonys duque",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:52:24.812Z"
+    },
+    {
+      "id": "7cc01984-e3f4-4fb6-af55-d6912b7b7f3e",
+      "name": "adolfo mejia",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:55:22.467Z"
+    },
+    {
+      "id": "81970eba-be62-4263-9b32-46e43d5adb2e",
+      "name": "carmencita esposa honorio",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:56:11.611Z"
+    },
+    {
+      "id": "0931f127-45c8-48a8-9f38-8da32a4b7f59",
+      "name": "yessika perez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:56:48.099Z"
+    },
+    {
+      "id": "ed08f9b2-e509-4bdb-ad2c-59476acc4517",
+      "name": "carmen ramirez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:57:17.115Z"
+    },
+    {
+      "id": "331261df-e31f-4dfa-ae30-4dd152c0d701",
+      "name": "jesus duque",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:57:38.283Z"
+    },
+    {
+      "id": "a201697a-9004-42b7-ac32-f94ec5cd2395",
+      "name": "honorio ramirez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:57:50.955Z"
+    },
+    {
+      "id": "5aabd397-bbaf-47af-b6f1-dc81bf7c7d07",
+      "name": "deyanira mejia",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:58:09.355Z"
+    },
+    {
+      "id": "c5d0467b-851f-4162-8e26-a78965d75578",
+      "name": "yulimar mejia",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:58:26.388Z"
+    },
+    {
+      "id": "bc6013eb-b8dd-46fd-8c90-de290bd9d80b",
+      "name": "jorge luis",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:58:45.212Z"
+    },
+    {
+      "id": "cbc358b5-e054-46d4-823f-82eaa348cd8f",
+      "name": "yunior sobrino tia omaira",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T00:59:31.397Z"
+    },
+    {
+      "id": "97c03c58-fff9-419c-9954-8e7c42166059",
+      "name": "deglis",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:00:25.196Z"
+    },
+    {
+      "id": "fc9dcf7c-3c84-43a7-9fe6-db987df92904",
+      "name": "tia life",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:00:49.812Z"
+    },
+    {
+      "id": "ec584729-918e-4129-879d-5072dd711841",
+      "name": "yohana rangel",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:01:18.963Z"
+    },
+    {
+      "id": "2c9ee595-6e75-4d04-9c05-099e2398a0de",
+      "name": "karla quintero",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:01:48.844Z"
+    },
+    {
+      "id": "5f042780-747b-405b-8daf-4bc79261ab9b",
+      "name": "emeli pastrana",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:02:38.324Z"
+    },
+    {
+      "id": "63272f8f-15ad-418c-b7ed-e0421bb045ec",
+      "name": "jean carlos ramirez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:03:23.971Z"
+    },
+    {
+      "id": "ec6b0827-d33b-4ba6-b1a9-ab22cc3ef412",
+      "name": "tio chano",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:03:44.796Z"
+    },
+    {
+      "id": "1c3a9c7e-8824-4a2e-a11b-f597bd941c7c",
+      "name": "tia omaira",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:04:00.588Z"
+    },
+    {
+      "id": "64fd8fae-a979-4c7d-b887-99d38c809b1f",
+      "name": "isabela balvuena",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:04:20.901Z"
+    },
+    {
+      "id": "49da4e06-3766-42d7-980f-8183f6d9b244",
+      "name": "crismari valbuena",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:04:51.731Z"
+    },
+    {
+      "id": "8f61b867-3f90-4e45-bd76-2cff1726d2b9",
+      "name": "naomi gomez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:05:07.947Z"
+    },
+    {
+      "id": "5fe4bc92-2994-4280-8679-b86371ec63e3",
+      "name": "tia alicia",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:06:05.420Z"
+    },
+    {
+      "id": "02a1917d-d6ce-4827-9532-1c77b562b76b",
+      "name": "elias ramirez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:06:30.588Z"
+    },
+    {
+      "id": "790f5b67-53fa-40fd-8fa3-718e4af753c7",
+      "name": "keiler quintero",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:06:57.779Z"
+    },
+    {
+      "id": "d453f988-3c54-4ccc-8830-e2b9341f6241",
+      "name": "yoleima ramirez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:07:31.427Z"
+    },
+    {
+      "id": "ad6277ab-8a44-4421-b58a-ee6debe62b8c",
+      "name": "karelys quintero",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:08:04.716Z"
+    },
+    {
+      "id": "3e9079cc-3a68-4014-b95a-7dc7d27b2249",
+      "name": "tio rodolfo",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:08:36.987Z"
+    },
+    {
+      "id": "f380b56f-7c99-4ef8-8113-9424336e2243",
+      "name": "karianna",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:09:00.075Z"
+    },
+    {
+      "id": "fb39d91c-5ab7-43db-8980-0d90ee6f5e45",
+      "name": "barbara balvuena",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:09:34.339Z"
+    },
+    {
+      "id": "7b0abc9f-6497-4694-a5e5-f830c10e806f",
+      "name": "naybi",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:09:46.716Z"
+    },
+    {
+      "id": "82c89fae-6b1d-4d22-a594-5887473abec2",
+      "name": "tio lucidio",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:10:08.644Z"
+    },
+    {
+      "id": "ddf71ecb-d7d4-4137-9766-2cd84fdc2530",
+      "name": "carolina quintero",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:11:01.972Z"
+    },
+    {
+      "id": "80db9ed3-90e2-4033-9f16-a20b30cc18c8",
+      "name": "darly ramirez",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:11:24.636Z"
+    },
+    {
+      "id": "b68fb434-ef06-4c59-82b3-d9e93b549aff",
+      "name": "jhon kleiver",
+      "phone": "",
+      "note": "",
+      "createdAt": "2026-11-18T01:16:10.653Z"
+    }
+  ],
+  "assignments": {
+    "2": {
+      "personId": "bc6013eb-b8dd-46fd-8c90-de290bd9d80b",
+      "at": "2026-11-18T00:58:45.212Z",
+      "note": ""
+    },
+    "3": {
+      "personId": "8f61b867-3f90-4e45-bd76-2cff1726d2b9",
+      "at": "2026-11-18T01:05:20.724Z",
+      "note": ""
+    },
+    "5": {
+      "personId": "5f042780-747b-405b-8daf-4bc79261ab9b",
+      "at": "2026-11-18T01:02:38.324Z",
+      "note": ""
+    },
+    "6": {
+      "personId": "2c9ee595-6e75-4d04-9c05-099e2398a0de",
+      "at": "2026-11-18T01:02:08.342Z",
+      "note": ""
+    },
+    "7": {
+      "personId": "f380b56f-7c99-4ef8-8113-9424336e2243",
+      "at": "2026-11-18T01:09:00.075Z",
+      "note": ""
+    },
+    "8": {
+      "personId": "1c3a9c7e-8824-4a2e-a11b-f597bd941c7c",
+      "at": "2026-11-18T01:04:00.588Z",
+      "note": ""
+    },
+    "9": {
+      "personId": "e1f4bbdb-8250-427f-8379-78293cf07382",
+      "at": "2026-11-18T00:52:24.812Z",
+      "note": ""
+    },
+    "10": {
+      "personId": "02a1917d-d6ce-4827-9532-1c77b562b76b",
+      "at": "2026-11-18T01:06:30.588Z",
+      "note": ""
+    },
+    "11": {
+      "personId": "8f61b867-3f90-4e45-bd76-2cff1726d2b9",
+      "at": "2026-11-18T01:05:07.947Z",
+      "note": ""
+    },
+    "12": {
+      "personId": "cbc358b5-e054-46d4-823f-82eaa348cd8f",
+      "at": "2026-11-18T00:59:31.397Z",
+      "note": ""
+    },
+    "13": {
+      "personId": "cbc358b5-e054-46d4-823f-82eaa348cd8f",
+      "at": "2026-11-18T00:59:36.165Z",
+      "note": ""
+    },
+    "14": {
+      "personId": "cbc358b5-e054-46d4-823f-82eaa348cd8f",
+      "at": "2026-11-18T00:59:42.014Z",
+      "note": ""
+    },
+    "15": {
+      "personId": "2c9ee595-6e75-4d04-9c05-099e2398a0de",
+      "at": "2026-11-18T01:01:48.844Z",
+      "note": ""
+    },
+    "16": {
+      "personId": "80db9ed3-90e2-4033-9f16-a20b30cc18c8",
+      "at": "2026-11-18T01:11:24.636Z",
+      "note": ""
+    },
+    "17": {
+      "personId": "2c9ee595-6e75-4d04-9c05-099e2398a0de",
+      "at": "2026-11-18T01:01:58.427Z",
+      "note": ""
+    },
+    "18": {
+      "personId": "63272f8f-15ad-418c-b7ed-e0421bb045ec",
+      "at": "2026-11-18T01:03:23.972Z",
+      "note": ""
+    },
+    "20": {
+      "personId": "b68fb434-ef06-4c59-82b3-d9e93b549aff",
+      "at": "2026-11-18T01:16:10.653Z",
+      "note": ""
+    },
+    "22": {
+      "personId": "5f042780-747b-405b-8daf-4bc79261ab9b",
+      "at": "2026-11-18T01:02:43.542Z",
+      "note": ""
+    },
+    "24": {
+      "personId": "ec584729-918e-4129-879d-5072dd711841",
+      "at": "2026-11-18T01:01:18.963Z",
+      "note": ""
+    },
+    "26": {
+      "personId": "7cc01984-e3f4-4fb6-af55-d6912b7b7f3e",
+      "at": "2026-11-18T00:55:22.467Z",
+      "note": ""
+    },
+    "27": {
+      "personId": "7b0abc9f-6497-4694-a5e5-f830c10e806f",
+      "at": "2026-11-18T01:09:46.716Z",
+      "note": ""
+    },
+    "28": {
+      "personId": "49da4e06-3766-42d7-980f-8183f6d9b244",
+      "at": "2026-11-18T01:04:51.731Z",
+      "note": ""
+    },
+    "30": {
+      "personId": "790f5b67-53fa-40fd-8fa3-718e4af753c7",
+      "at": "2026-11-18T01:06:57.779Z",
+      "note": ""
+    },
+    "32": {
+      "personId": "97c03c58-fff9-419c-9954-8e7c42166059",
+      "at": "2026-11-18T01:00:25.196Z",
+      "note": ""
+    },
+    "36": {
+      "personId": "81970eba-be62-4263-9b32-46e43d5adb2e",
+      "at": "2026-11-18T00:56:11.611Z",
+      "note": ""
+    },
+    "51": {
+      "personId": "fc9dcf7c-3c84-43a7-9fe6-db987df92904",
+      "at": "2026-11-18T01:00:57.636Z",
+      "note": ""
+    },
+    "53": {
+      "personId": "ec584729-918e-4129-879d-5072dd711841",
+      "at": "2026-11-18T01:01:26.483Z",
+      "note": ""
+    },
+    "57": {
+      "personId": "ec6b0827-d33b-4ba6-b1a9-ab22cc3ef412",
+      "at": "2026-11-18T01:03:44.796Z",
+      "note": ""
+    },
+    "58": {
+      "personId": "c5d0467b-851f-4162-8e26-a78965d75578",
+      "at": "2026-11-18T00:58:26.388Z",
+      "note": ""
+    },
+    "60": {
+      "personId": "ad6277ab-8a44-4421-b58a-ee6debe62b8c",
+      "at": "2026-11-18T01:08:04.716Z",
+      "note": ""
+    },
+    "61": {
+      "personId": "0931f127-45c8-48a8-9f38-8da32a4b7f59",
+      "at": "2026-11-18T00:56:48.099Z",
+      "note": ""
+    },
+    "62": {
+      "personId": "ed08f9b2-e509-4bdb-ad2c-59476acc4517",
+      "at": "2026-11-18T00:57:17.115Z",
+      "note": ""
+    },
+    "63": {
+      "personId": "5fe4bc92-2994-4280-8679-b86371ec63e3",
+      "at": "2026-11-18T01:06:05.420Z",
+      "note": ""
+    },
+    "64": {
+      "personId": "ddf71ecb-d7d4-4137-9766-2cd84fdc2530",
+      "at": "2026-11-18T01:11:01.972Z",
+      "note": ""
+    },
+    "67": {
+      "personId": "fb39d91c-5ab7-43db-8980-0d90ee6f5e45",
+      "at": "2026-11-18T01:09:34.339Z",
+      "note": ""
+    },
+    "68": {
+      "personId": "64fd8fae-a979-4c7d-b887-99d38c809b1f",
+      "at": "2026-11-18T01:04:20.901Z",
+      "note": ""
+    },
+    "71": {
+      "personId": "a201697a-9004-42b7-ac32-f94ec5cd2395",
+      "at": "2026-11-18T00:57:50.955Z",
+      "note": ""
+    },
+    "75": {
+      "personId": "5aabd397-bbaf-47af-b6f1-dc81bf7c7d07",
+      "at": "2026-11-18T00:58:09.355Z",
+      "note": ""
+    },
+    "77": {
+      "personId": "d453f988-3c54-4ccc-8830-e2b9341f6241",
+      "at": "2026-11-18T01:07:31.427Z",
+      "note": ""
+    },
+    "81": {
+      "personId": "ad6277ab-8a44-4421-b58a-ee6debe62b8c",
+      "at": "2026-11-18T01:08:10.243Z",
+      "note": ""
+    },
+    "84": {
+      "personId": "ad6277ab-8a44-4421-b58a-ee6debe62b8c",
+      "at": "2026-11-18T01:08:18.523Z",
+      "note": ""
+    },
+    "87": {
+      "personId": "fc9dcf7c-3c84-43a7-9fe6-db987df92904",
+      "at": "2026-11-18T01:00:49.812Z",
+      "note": ""
+    },
+    "88": {
+      "personId": "82c89fae-6b1d-4d22-a594-5887473abec2",
+      "at": "2026-11-18T01:10:08.644Z",
+      "note": ""
+    },
+    "92": {
+      "personId": "ddf71ecb-d7d4-4137-9766-2cd84fdc2530",
+      "at": "2026-11-18T01:11:07.740Z",
+      "note": ""
+    },
+    "97": {
+      "personId": "3e9079cc-3a68-4014-b95a-7dc7d27b2249",
+      "at": "2026-11-18T01:08:36.987Z",
+      "note": ""
+    }
+  },
+  "payments": [
+    {
+      "id": "773b9a10-cf9b-4abe-b27f-241e8a051ab4",
+      "personId": "cbc358b5-e054-46d4-823f-82eaa348cd8f",
+      "numbers": [
+        "12",
+        "13",
+        "14"
+      ],
+      "method": "binance",
+      "amount": 30,
+      "currency": "USDT",
+      "rate": 1,
+      "amountUSD": 30,
+      "allocations": {
+        "12": 10,
+        "13": 10,
+        "14": 10
+      },
+      "reference": "466248260173611008",
+      "date": "2026-11-17",
+      "receivedBy": "jesus duque",
+      "note": "",
+      "createdAt": "2026-11-18T01:13:58.979Z"
+    }
+  ],
+  "draw": null
+}

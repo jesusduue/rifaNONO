@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1d4ed8">
+<title>Rifa Solidaria — Control de números y pagos</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%97%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<!-- Bootstrap 5.3 + Bootstrap Icons (CDN) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{--r-blue:#1d4ed8;--r-gold:#f5b301}
+body{background:#eef1f8;color:#1e293b;font-size:15px}
+.rifa-container{max-width:1080px}
+
+/* ---------- Header ---------- */
+.rifa-header{background:linear-gradient(135deg,#0f2461 0%,#1d4ed8 65%,#2563eb 100%);color:#fff;padding:1.15rem 0 1rem;position:relative;overflow:hidden}
+.rifa-header::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(245,179,1,.28),transparent 70%);top:-140px;right:-70px;pointer-events:none}
+.rifa-header::after{content:'';position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);bottom:-120px;left:-60px;pointer-events:none}
+.rifa-header .container{position:relative;z-index:1}
+.rifa-logo{width:54px;height:54px;flex:none;display:flex;align-items:center;justify-content:center;font-size:1.7rem;color:#ffd76a;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:1rem}
+.hstat{display:inline-flex;align-items:center;gap:.35rem;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:50rem;padding:.3rem .8rem;font-size:.8rem}
+.hstat b{color:#ffd76a}
+
+/* ---------- Nav ---------- */
+.rifa-nav{background:#fff;box-shadow:0 2px 10px rgba(15,36,97,.07);z-index:1020}
+.rifa-tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+.rifa-tabs::-webkit-scrollbar{display:none}
+.rifa-tabs .nav-link{color:#64748b;font-weight:600;font-size:.875rem;border:0;border-bottom:3px solid transparent;border-radius:0;white-space:nowrap;padding:.8rem .95rem}
+.rifa-tabs .nav-link:hover{color:#173a8a}
+.rifa-tabs .nav-link.active{color:#173a8a;border-bottom-color:var(--r-gold);background:transparent}
+
+/* ---------- Botones de marca ---------- */
+.btn{font-weight:600}
+.btn-primary{--bs-btn-color:#fff;--bs-btn-bg:#1d4ed8;--bs-btn-border-color:#1d4ed8;--bs-btn-hover-color:#fff;--bs-btn-hover-bg:#173a8a;--bs-btn-hover-border-color:#173a8a;--bs-btn-active-color:#fff;--bs-btn-active-bg:#12296b;--bs-btn-active-border-color:#12296b;--bs-btn-disabled-color:#fff;--bs-btn-disabled-bg:#9db4e8;--bs-btn-disabled-border-color:#9db4e8;--bs-btn-focus-shadow-rgb:29,78,216}
+.btn-gold{--bs-btn-color:#5c3b00;--bs-btn-bg:#f5b301;--bs-btn-border-color:#f5b301;--bs-btn-hover-color:#5c3b00;--bs-btn-hover-bg:#d99a00;--bs-btn-hover-border-color:#d99a00;--bs-btn-active-color:#5c3b00;--bs-btn-active-bg:#c08800;--bs-btn-active-border-color:#c08800;--bs-btn-disabled-color:#5c3b00;--bs-btn-disabled-bg:#f3d894;--bs-btn-disabled-border-color:#f3d894;--bs-btn-focus-shadow-rgb:245,179,1}
+.btn-soft{--bs-btn-color:#3b4a63;--bs-btn-bg:#f1f5fb;--bs-btn-border-color:#e3e8f2;--bs-btn-hover-color:#173a8a;--bs-btn-hover-bg:#e4ecfa;--bs-btn-hover-border-color:#cdd9ef;--bs-btn-active-color:#173a8a;--bs-btn-active-bg:#d9e5f8;--bs-btn-active-border-color:#cdd9ef;--bs-btn-disabled-color:#94a3b8;--bs-btn-disabled-bg:#f1f5fb;--bs-btn-disabled-border-color:#e3e8f2;--bs-btn-focus-shadow-rgb:29,78,216}
+
+/* ---------- Tarjetas ---------- */
+.card{border-color:#e9edf6;border-radius:.8rem;box-shadow:0 4px 16px rgba(18,42,99,.06)}
+
+/* ---------- Filtros / leyenda ---------- */
+.fbtn{border:1.5px solid #e3e8f2;background:#fff;color:#64748b;border-radius:50rem;font-size:.78rem;padding:.3rem .7rem;display:inline-flex;align-items:center;gap:.4rem;font-weight:600}
+.fbtn:hover{border-color:#c3d2f5;color:#173a8a}
+.fbtn.active{border-color:#1d4ed8;background:#eef3fe;color:#173a8a}
+.sw{width:14px;height:14px;border-radius:4px;border:2px solid #cbd5e1;background:#fff;display:inline-block;flex:none}
+.sw-reserved{background:#fef3c7;border-color:#f0c33c}
+.sw-partial{background:#ffedd5;border-color:#f79147}
+.sw-paid{background:#16a34a;border-color:#12873d}
+
+/* ---------- Tablero de números ---------- */
+.num-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:.5rem}
+.num{aspect-ratio:1;border-radius:.6rem;border:2px solid #dbe3f0;background:#fff;font-weight:700;font-size:.95rem;color:#5b6b87;cursor:pointer;position:relative;transition:transform .12s,box-shadow .12s,opacity .2s;user-select:none;padding:0}
+.num:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(18,42,99,.14)}
+.num-reserved{background:#fef3c7;border-color:#f0c33c;color:#92600a}
+.num-partial{background:#ffedd5;border-color:#f79147;color:#9a3412}
+.num-paid{background:#16a34a;border-color:#12873d;color:#fff}
+.num-paid::after{content:'✓';position:absolute;top:0;right:4px;font-size:.62rem;font-weight:800}
+.num-dim{opacity:.15;pointer-events:none}
+
+/* ---------- Badges / chips de estado ---------- */
+.badge-free{background:#f1f5f9;color:#64748b}
+.badge-reserved{background:#fef3c7;color:#92600a}
+.badge-partial{background:#ffedd5;color:#9a3412}
+.badge-paid{background:#dcfce7;color:#15803d}
+.chip{display:inline-flex;align-items:center;gap:.2rem;padding:.2rem .6rem;border-radius:50rem;font-size:.8rem;font-weight:700;cursor:pointer;border:1.5px solid transparent}
+.chip small{font-weight:600;font-size:.65rem;opacity:.85}
+.chip-free{background:#eef2f7;color:#64748b}
+.chip-reserved{background:#fef3c7;color:#92600a;border-color:#f0c33c}
+.chip-partial{background:#ffedd5;color:#9a3412;border-color:#f79147}
+.chip-paid{background:#dcfce7;color:#15803d;border-color:#86efac}
+
+/* ---------- Personas ---------- */
+.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:.75rem}
+.avatar{width:40px;height:40px;flex:none;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem}
+
+/* ---------- Filas clave-valor / listas ---------- */
+.kvrow{display:flex;justify-content:space-between;align-items:center;gap:.75rem;padding:.55rem 0;border-bottom:1px dashed #e3e8f2;font-size:.875rem}
+.kvrow .k{color:#64748b}
+.pi{display:flex;justify-content:space-between;gap:.75rem;padding:.6rem 0;border-bottom:1px dashed #e3e8f2;font-size:.85rem;align-items:center}
+.pi:last-child{border-bottom:0}
+.mrow{display:flex;justify-content:space-between;gap:.75rem;padding:.55rem 0;border-bottom:1px dashed #e3e8f2;font-size:.875rem;flex-wrap:wrap;align-items:center}
+.mrow:last-child{border-bottom:0}
+.balance-box{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;text-align:center;background:#f5f8ff;border-radius:.75rem;padding:.75rem .5rem;margin:.6rem 0}
+.balance-box .k{display:block;font-size:.65rem;color:#64748b;font-weight:600}
+.balance-box b{font-size:.95rem}
+
+/* ---------- Selección de números en pago ---------- */
+.chips-box{display:flex;flex-wrap:wrap;gap:.45rem;max-height:190px;overflow:auto;border:1.5px dashed #e3e8f2;border-radius:.7rem;padding:.6rem;background:#fbfcfe}
+.pick{display:inline-flex;align-items:center;gap:.35rem;border:1.5px solid #e3e8f2;background:#fff;border-radius:.6rem;padding:.35rem .65rem;font-size:.8rem;font-weight:700;color:#1e293b;cursor:pointer}
+.pick small{font-weight:600;font-size:.65rem;color:#64748b}
+.pick.on{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.pick.on small{color:#d3e0fd}
+.alloc{background:#f4f7ff;border:1px solid #d9e4fb;border-radius:.7rem;padding:.7rem .75rem;margin-top:.75rem;font-size:.8rem}
+.alloc .arow{display:flex;justify-content:space-between;gap:.75rem;padding:.15rem 0;flex-wrap:wrap}
+.alloc .warn{color:#dc2626;font-weight:700}
+
+/* ---------- Estadísticas ---------- */
+.stat-card .k1{font-size:.72rem;font-weight:600;color:#64748b}
+.stat-card .v{font-size:1.35rem;font-weight:800;line-height:1.25}
+.stat-card .k2{font-size:.68rem;color:#94a3b8}
+.v-gold{color:#b45309}.v-green{color:#15803d}.v-red{color:#dc2626}.v-blue{color:#1d4ed8}.v-orange{color:#ea580c}
+.barline{display:grid;grid-template-columns:88px 1fr auto;align-items:center;gap:.65rem;font-size:.78rem;color:#64748b;font-weight:600;margin-bottom:.55rem}
+.barline .progress{height:.7rem;border-radius:50rem;background:#e8edf6}
+.pbar-blue{background-color:#1d4ed8}
+.pbar-gold{background-color:#f5b301}
+.pbar-green{background-color:#16a34a}
+
+/* ---------- Otros ---------- */
+.welcome-tip{background:linear-gradient(135deg,#fff8e6,#fff);border:1.5px solid #f5d878;border-radius:.9rem;padding:1rem 1.1rem;margin-bottom:.9rem;font-size:.9rem}
+.winner{background:linear-gradient(135deg,#fde68a,#f59e0b);border-radius:.9rem;padding:1.5rem;text-align:center;color:#78350f;font-size:.95rem;margin-bottom:.9rem;box-shadow:0 4px 16px rgba(18,42,99,.12);line-height:1.7}
+.winner b{font-size:2.4rem;display:block;font-weight:900}
+.hint{font-size:.78rem;color:#64748b;line-height:1.55}
+.empty{text-align:center;color:#64748b;padding:1.75rem .5rem;font-size:.875rem;line-height:1.7}
+.howto{padding-left:1.2rem;font-size:.82rem;color:#3b4a63;display:grid;gap:.45rem;line-height:1.55;margin:0}
+.text-warn-t{color:#c2410c}
+.form-label{font-size:.78rem;font-weight:600;color:#64748b;margin-bottom:.3rem}
+.table thead th{font-size:.68rem;text-transform:uppercase;letter-spacing:.4px;color:#64748b;white-space:nowrap}
+.modal-title{font-size:1rem;font-weight:700}
+.toast{font-size:.85rem}
+
+/* ---------- Confirmación personalizada (por encima de todo) ---------- */
+.confirm-overlay{position:fixed;inset:0;background:rgba(10,18,40,.6);backdrop-filter:blur(2px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem;overflow:auto}
+.confirm-box{background:#fff;border-radius:1rem;max-width:460px;width:100%;box-shadow:0 24px 70px rgba(0,0,0,.35);animation:pop .18s ease}
+@keyframes pop{from{transform:scale(.96);opacity:0}}
+#toasts{z-index:3100}
+
+@media(max-width:575px){
+ .balance-box{grid-template-columns:repeat(2,1fr)}
+ .barline{grid-template-columns:74px 1fr auto}
+ .num-grid{grid-template-columns:repeat(auto-fill,minmax(45px,1fr))}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="rifa-header">
+ <div class="container rifa-container">
+  <div class="d-flex align-items-center gap-3">
+   <div class="rifa-logo"><i class="bi bi-heart-fill"></i></div>
+   <div>
+    <h1 class="h5 fw-bold mb-1" id="hTitle">Rifa Solidaria</h1>
+    <p class="mb-0 small" id="hSub" style="opacity:.92"></p>
+   </div>
+  </div>
+  <div class="d-flex flex-wrap gap-2 mt-3">
+   <span class="hstat"><i class="bi bi-ticket-perforated"></i> Vendidos: <b id="hsSold">0</b></span>
+   <span class="hstat"><i class="bi bi-cash-coin"></i> Recaudado: <b id="hsCollected">$0,00</b></span>
+   <span class="hstat"><i class="bi bi-hourglass-split"></i> Por cobrar: <b id="hsPending">$0,00</b></span>
+  </div>
+ </div>
+</header>
+
+<!-- ============ NAV (pestañas Bootstrap) ============ -->
+<nav class="rifa-nav sticky-top">
+ <div class="container rifa-container">
+  <ul class="nav rifa-tabs" role="tablist">
+   <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-numeros" type="button"><i class="bi bi-grid-3x3-gap me-1"></i>Números</button></li>
+   <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-personas" type="button"><i class="bi bi-people me-1"></i>Personas</button></li>
+   <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pagos" type="button"><i class="bi bi-cash-stack me-1"></i>Pagos</button></li>
+   <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-resumen" type="button"><i class="bi bi-bar-chart-line me-1"></i>Resumen</button></li>
+   <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-ajustes" type="button"><i class="bi bi-gear me-1"></i>Ajustes</button></li>
+  </ul>
+ </div>
+</nav>
+
+<main class="container rifa-container py-3">
+<div class="tab-content">
+
+ <!-- ============ NÚMEROS ============ -->
+ <section class="tab-pane fade show active" id="tab-numeros">
+  <div class="welcome-tip" id="welcomeHint">
+   <b>👋 ¡Empecemos!</b>
+   <p class="hint mb-0 mt-1">Toca cualquier número <b>disponible</b> para asignárselo a una persona (puedes crearla en el momento). Después podrás registrar sus pagos y abonos. Para cargar varios números de golpe usa <b>Asignación rápida</b>.</p>
+  </div>
+  <div class="card mb-3">
+   <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+     <h6 class="fw-bold mb-0"><i class="bi bi-grid-3x3-gap me-1"></i>Tablero de números</h6>
+     <button class="btn btn-sm btn-primary" id="btnBulk" type="button"><i class="bi bi-lightning-charge me-1"></i>Asignación rápida</button>
+    </div>
+    <div class="d-flex flex-wrap gap-2 mb-3" id="legend">
+     <button class="fbtn active" data-f="all" type="button"><span class="sw"></span>Todos</button>
+     <button class="fbtn" data-f="free" type="button"><span class="sw"></span>Disponibles</button>
+     <button class="fbtn" data-f="reserved" type="button"><span class="sw sw-reserved"></span>Reservados</button>
+     <button class="fbtn" data-f="partial" type="button"><span class="sw sw-partial"></span>Abonados</button>
+     <button class="fbtn" data-f="paid" type="button"><span class="sw sw-paid"></span>Pagados</button>
+    </div>
+    <div class="num-grid" id="grid"></div>
+    <div class="d-flex flex-wrap gap-3 small text-muted mt-3" id="gridCounts"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- ============ PERSONAS ============ -->
+ <section class="tab-pane fade" id="tab-personas">
+  <div class="card">
+   <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+     <h6 class="fw-bold mb-0"><i class="bi bi-people me-1"></i>Personas <span class="badge rounded-pill text-bg-light border" id="personCount">0</span></h6>
+     <div class="d-flex gap-2 flex-wrap align-items-center">
+      <div class="input-group input-group-sm" style="max-width:240px">
+       <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+       <input class="form-control" id="personSearch" placeholder="Buscar nombre o teléfono…">
+      </div>
+      <button class="btn btn-sm btn-primary" id="btnAddPerson" type="button"><i class="bi bi-person-plus me-1"></i>Persona</button>
+     </div>
+    </div>
+    <div class="pcards" id="personList"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- ============ PAGOS ============ -->
+ <section class="tab-pane fade" id="tab-pagos">
+  <div class="card">
+   <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+     <h6 class="fw-bold mb-0"><i class="bi bi-cash-stack me-1"></i>Pagos y abonos</h6>
+     <button class="btn btn-sm btn-gold" id="btnAddPayment" type="button"><i class="bi bi-plus-lg me-1"></i>Registrar pago</button>
+    </div>
+    <div class="row g-2 mb-2">
+     <div class="col-md-4"><select class="form-select form-select-sm" id="pfPerson"><option value="">Todas las personas</option></select></div>
+     <div class="col-md-4">
+      <select class="form-select form-select-sm" id="pfMethod">
+       <option value="">Todos los métodos</option>
+       <option value="binance">🅱️ Binance (USDT)</option>
+       <option value="pagoMovil">📱 Pago Móvil (Bs)</option>
+       <option value="usd">💵 Efectivo USD</option>
+       <option value="cop">💶 Efectivo COP</option>
+      </select>
+     </div>
+     <div class="col-md-4">
+      <div class="input-group input-group-sm">
+       <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+       <input class="form-control" id="pfSearch" placeholder="Referencia, nota, persona…">
+      </div>
+     </div>
+    </div>
+    <div class="hint mb-2" id="payTotal"></div>
+    <div id="payTable"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- ============ RESUMEN ============ -->
+ <section class="tab-pane fade" id="tab-resumen">
+  <div id="drawBox"></div>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2 mb-3" id="sumStats"></div>
+  <div class="card mb-3">
+   <div class="card-body">
+    <h6 class="fw-bold mb-3"><i class="bi bi-graph-up-arrow me-1"></i>Avance de la rifa</h6>
+    <div class="barline"><span>Vendidos</span><div class="progress"><div class="progress-bar pbar-blue" id="barSold" style="width:0%"></div></div><b id="lblSold"></b></div>
+    <div class="barline"><span>Pagados</span><div class="progress"><div class="progress-bar pbar-gold" id="barPaid" style="width:0%"></div></div><b id="lblPaid"></b></div>
+    <div class="barline"><span>Recaudado</span><div class="progress"><div class="progress-bar pbar-green" id="barColl" style="width:0%"></div></div><b id="lblColl"></b></div>
+   </div>
+  </div>
+  <div class="row g-3">
+   <div class="col-lg-6"><div class="card h-100"><div class="card-body"><h6 class="fw-bold mb-2"><i class="bi bi-credit-card me-1"></i>Recaudado por método</h6><div id="sumMethods"></div></div></div></div>
+   <div class="col-lg-6"><div class="card h-100"><div class="card-body"><h6 class="fw-bold mb-2"><i class="bi bi-person-lines-fill me-1"></i>Saldos por persona</h6><div id="sumPersons"></div></div></div></div>
+  </div>
+  <div class="card mt-3"><div class="card-body"><h6 class="fw-bold mb-2"><i class="bi bi-clock-history me-1"></i>Últimos movimientos</h6><div id="sumRecent"></div></div></div>
+ </section>
+
+ <!-- ============ AJUSTES ============ -->
+ <section class="tab-pane fade" id="tab-ajustes">
+  <div class="card mb-3">
+   <div class="card-body">
+    <h6 class="fw-bold mb-3"><i class="bi bi-gear me-1"></i>Datos de la rifa</h6>
+    <div class="row g-3">
+     <div class="col-md-6"><label class="form-label" for="cfTitle">Título</label><input class="form-control" id="cfTitle"></div>
+     <div class="col-md-6"><label class="form-label" for="cfBen">Beneficiario</label><input class="form-control" id="cfBen"></div>
+     <div class="col-md-6"><label class="form-label" for="cfPrize">Premio (USD)</label><input class="form-control" id="cfPrize" type="number" step="any" inputmode="decimal"></div>
+     <div class="col-md-6"><label class="form-label" for="cfPrice">Precio por número (USD)</label><input class="form-control" id="cfPrice" type="number" step="any" inputmode="decimal"></div>
+     <div class="col-md-6"><label class="form-label" for="cfTotal">Cantidad de números</label><input class="form-control" id="cfTotal" type="number" min="10" max="1000"></div>
+     <div class="col-md-6"><label class="form-label" for="cfDate">Fecha del sorteo</label><input class="form-control" id="cfDate" type="date"></div>
+     <div class="col-md-6"><label class="form-label" for="cfRateBs">Tasa: Bs por 1 USD (pago móvil)</label><input class="form-control" id="cfRateBs" type="number" step="any" inputmode="decimal"></div>
+     <div class="col-md-6"><label class="form-label" for="cfRateCop">Tasa: COP por 1 USD</label><input class="form-control" id="cfRateCop" type="number" step="any" inputmode="decimal"></div>
+    </div>
+    <p class="hint mt-3 mb-0">💡 Las tasas se usan para convertir a USD <b>al momento de registrar cada pago</b>, y cada pago guarda la tasa usada (transparencia). Ajústalas cuando cambien.</p>
+    <button class="btn btn-primary mt-3" id="btnSaveCfg" type="button"><i class="bi bi-save me-1"></i>Guardar configuración</button>
+   </div>
+  </div>
+  <div class="card mb-3">
+   <div class="card-body">
+    <h6 class="fw-bold mb-2"><i class="bi bi-info-circle me-1"></i>Cómo funciona el control</h6>
+    <ul class="howto">
+     <li><span class="chip chip-reserved">⏳ Reservado</span> la persona eligió el número, sin abonos aún.</li>
+     <li><span class="chip chip-partial">🟠 Abonado</span> pagó una parte del valor del número.</li>
+     <li><span class="chip chip-paid">✅ Pagado</span> completó el valor del número.</li>
+     <li>Cada pago se reparte <b>en orden</b> entre los números seleccionados hasta completarlos.</li>
+     <li>Los estados se calculan siempre desde los pagos registrados: si eliminas o editas un pago, los números se recalculan solos.</li>
+    </ul>
+   </div>
+  </div>
+  <div class="card mb-3">
+   <div class="card-body">
+    <h6 class="fw-bold mb-2"><i class="bi bi-cloud-arrow-down me-1"></i>Respaldo y transparencia</h6>
+    <p class="hint mb-3">Los datos se guardan <b>solo en este navegador</b>. Exporta respaldos con frecuencia, o para pasar el control a otro celular/computadora (importa el archivo allá).</p>
+    <div class="d-flex flex-wrap gap-2">
+     <button class="btn btn-outline-primary" id="btnExport" type="button"><i class="bi bi-download me-1"></i>Exportar respaldo (JSON)</button>
+     <button class="btn btn-outline-primary" id="btnImport" type="button"><i class="bi bi-upload me-1"></i>Importar respaldo</button>
+     <button class="btn btn-outline-primary" id="btnCSV" type="button"><i class="bi bi-filetype-csv me-1"></i>Exportar pagos (CSV)</button>
+     <button class="btn btn-gold" id="btnShare" type="button"><i class="bi bi-whatsapp me-1"></i>Copiar resumen (WhatsApp)</button>
+    </div>
+    <input type="file" id="impFile" accept=".json,application/json" hidden>
+   </div>
+  </div>
+  <div class="card mb-3 border-danger-subtle">
+   <div class="card-body">
+    <h6 class="fw-bold text-danger mb-2"><i class="bi bi-exclamation-triangle me-1"></i>Zona peligrosa</h6>
+    <button class="btn btn-danger" id="btnReset" type="button"><i class="bi bi-trash me-1"></i>Borrar todos los datos</button>
+   </div>
+  </div>
+ </section>
+
+</div>
+</main>
+
+<footer class="text-center text-muted small py-4">
+ Hecho con ❤️ para la rifa · Datos guardados localmente en este navegador (localStorage) — haz respaldos 🙏<br>
+ Interfaz: Bootstrap 5 vía CDN (se necesita conexión a internet para cargar los estilos).
+</footer>
+
+<!-- Modal principal (contenido dinámico) -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-hidden="true">
+ <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" id="appModalDialog">
+  <div class="modal-content" id="appModalContent"></div>
+ </div>
+</div>
+
+<div id="confirmRoot"></div>
+<div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3" id="toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+'use strict';
+/* ============================================================
+   RIFA SOLIDARIA — Bootstrap 5 (CDN) + JS vanilla + localStorage
+   ⚠️ COMPATIBILIDAD: misma clave y misma estructura de datos que
+   la versión anterior (rifa_solidaria_adolfo_v1). Los datos ya
+   guardados en localStorage se cargan SIN pérdida alguna.
+   ============================================================ */
+
+/* ==================== Utilidades ==================== */
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'id-'+Date.now().toString(36)+Math.random().toString(36).slice(2,9);
+const clone=o=>JSON.parse(JSON.stringify(o));
+const round2=v=>Math.round((Number(v)+Number.EPSILON)*100)/100;
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+function pnum(v){const n=parseFloat(String(v==null?'':v).trim().replace(',','.'));return isNaN(n)?0:n;}
+function fmtNum(v,dec){v=Number(v)||0;return new Intl.NumberFormat('es-VE',{minimumFractionDigits:dec,maximumFractionDigits:dec}).format(v);}
+const fmtUSD=v=>'$'+fmtNum(v,2);
+function fmtDate(iso){if(!iso)return '—';const s=String(iso);const d=new Date(s.length===10?s+'T12:00:00':s);return isNaN(d.getTime())?s:d.toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+function downloadBlob(content,type,name){const b=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+async function copyText(t){try{await navigator.clipboard.writeText(t);return true;}catch(e){try{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();return true;}catch(e2){return false;}}}
+function parseNumbers(str,max){
+ const out=new Set();
+ String(str||'').split(/[,;]+/).forEach(part=>{
+  const t=part.trim();if(!t)return;
+  const m=t.match(/^(\d+)\s*(?:-|al?)\s*(\d+)$/i);
+  if(m){let a=parseInt(m[1],10),b=parseInt(m[2],10);if(a>b){const tmp=a;a=b;b=tmp;}for(let i=a;i<=b;i++){if(i>=1&&i<=max)out.add(i);}}
+  else if(/^\d+$/.test(t)){const v=parseInt(t,10);if(v>=1&&v<=max)out.add(v);}
+ });
+ return Array.from(out).sort((a,b)=>a-b);
+}
+
+/* ==================== Constantes ==================== */
+const STORE_KEY='rifa_solidaria_adolfo_v1'; /* ⚠️ MISMA CLAVE que la versión anterior */
+const METHODS={
+ binance:{label:'Binance (USDT)',short:'Binance',icon:'🅱️',cur:'USDT',refLabel:'ID de la transacción Binance'},
+ pagoMovil:{label:'Pago Móvil (Bs)',short:'Pago Móvil',icon:'📱',cur:'Bs',refLabel:'Nº de referencia del pago móvil'},
+ usd:{label:'Efectivo USD',short:'Efectivo USD',icon:'💵',cur:'USD',refLabel:'Detalle (opcional)'},
+ cop:{label:'Efectivo COP',short:'Efectivo COP',icon:'💶',cur:'COP',refLabel:'Detalle (opcional)'}
+};
+const ST={free:'Disponible',reserved:'Reservado',partial:'Abonado',paid:'Pagado'};
+const DEFAULTS={
+ version:1,
+ config:{title:'Rifa Solidaria',beneficiary:'Adolfo Quintero',prize:200,price:10,totalNumbers:100,drawDate:new Date().getFullYear()+'-12-12',rateBs:100,rateCop:4000},
+ persons:[],assignments:{},payments:[],draw:null
+};
+
+/* ==================== Estado (localStorage) ====================
+   La función normalize() es idéntica a la versión anterior:
+   garantiza que cualquier dato ya guardado se lea correctamente. */
+function normalize(s){
+ const d=clone(DEFAULTS);
+ if(!s||typeof s!=='object')return d;
+ const out=d;
+ out.config=Object.assign({},d.config,s.config||{});
+ out.config.price=+out.config.price||10;
+ out.config.totalNumbers=Math.max(1,+out.config.totalNumbers||100);
+ out.config.rateBs=+out.config.rateBs||100;
+ out.config.rateCop=+out.config.rateCop||4000;
+ out.persons=Array.isArray(s.persons)?s.persons.filter(p=>p&&p.id&&p.name).map(p=>({id:String(p.id),name:String(p.name),phone:p.phone?String(p.phone):'',note:p.note?String(p.note):'',createdAt:p.createdAt||new Date().toISOString()})):[];
+ out.assignments={};
+ if(s.assignments&&typeof s.assignments==='object'){
+  for(const k of Object.keys(s.assignments)){const a=s.assignments[k];if(a&&a.personId)out.assignments[k]={personId:String(a.personId),at:a.at||new Date().toISOString(),note:a.note?String(a.note):''};}
+ }
+ out.payments=Array.isArray(s.payments)?s.payments.filter(x=>x&&x.id).map(x=>{
+  const method=METHODS[x.method]?x.method:'usd';
+  return {id:String(x.id),personId:String(x.personId||''),numbers:Array.isArray(x.numbers)?x.numbers.map(String):[],method:method,amount:+x.amount||0,currency:METHODS[method].cur,rate:+x.rate||1,amountUSD:+x.amountUSD||0,allocations:(x.allocations&&typeof x.allocations==='object')?x.allocations:{},reference:x.reference?String(x.reference):'',date:x.date||todayISO(),receivedBy:x.receivedBy?String(x.receivedBy):'',note:x.note?String(x.note):'',createdAt:x.createdAt||new Date().toISOString()};
+ }):[];
+ out.draw=(s.draw&&s.draw.number)?s.draw:null;
+ return out;
+}
+let state=(function(){try{const raw=localStorage.getItem(STORE_KEY);return raw?normalize(JSON.parse(raw)):clone(DEFAULTS);}catch(e){return clone(DEFAULTS);}})();
+function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){toast('No se pudo guardar (almacenamiento lleno)','err');}}
+
+/* ==================== Datos derivados ==================== */
+const price=()=>Number(state.config.price)||0;
+const personById=id=>state.persons.find(p=>p.id===id);
+const paymentById=id=>state.payments.find(p=>p.id===id);
+function paidOf(n,excludeId){let s=0;for(const p of state.payments){if(p.id===excludeId)continue;if(p.allocations&&p.allocations[n])s+=Number(p.allocations[n])||0;}return round2(s);}
+function statusOf(n){const a=state.assignments[String(n)];if(!a)return 'free';const pd=paidOf(String(n));const pr=price();if(pr>0&&pd>=pr-0.005)return 'paid';if(pd>0.004)return 'partial';return 'reserved';}
+function numbersOfPerson(id){return Object.keys(state.assignments).filter(k=>state.assignments[k].personId===id).map(Number).sort((a,b)=>a-b);}
+function paymentsOfPerson(id){return state.payments.filter(p=>p.personId===id);}
+function personStats(id){const nums=numbersOfPerson(id);const total=round2(nums.length*price());const paid=round2(paymentsOfPerson(id).reduce((s,p)=>s+(Number(p.amountUSD)||0),0));return{nums:nums,total:total,paid:paid,pending:Math.max(0,round2(total-paid))};}
+function statusCounts(){const c={free:0,reserved:0,partial:0,paid:0};for(let n=1;n<=state.config.totalNumbers;n++)c[statusOf(n)]++;return c;}
+function totals(){const sold=Object.keys(state.assignments).length;const collected=round2(state.payments.reduce((s,p)=>s+(Number(p.amountUSD)||0),0));const expected=round2(state.config.totalNumbers*price());return{sold:sold,collected:collected,expected:expected,pending:Math.max(0,round2(sold*price()-collected))};}
+/* Reparte un monto USD en orden entre los números hasta completarlos */
+function computeAlloc(nums,amountUSD,excludeId){
+ const alloc={};let rem=round2(amountUSD);
+ for(const n of nums){
+  if(rem<=0.005)break;
+  const pend=round2(price()-paidOf(String(n),excludeId));
+  if(pend<=0.005)continue;
+  const take=Math.min(pend,rem);
+  alloc[String(n)]=round2(take);rem=round2(rem-take);
+ }
+ return{alloc:alloc,rem:rem};
+}
+const badge=st=>'<span class="badge rounded-pill badge-'+st+'">'+ST[st]+'</span>';
+function fmtAmount(x){const dec=x.currency==='COP'?0:2;return fmtNum(x.amount,dec)+' '+x.currency;}
+function initials(name){return String(name||'').trim().split(/\s+/).slice(0,2).map(w=>(w[0]||'')).join('').toUpperCase();}
+
+/* ==================== UI base (Bootstrap) ==================== */
+function toast(msg,type){
+ const el=document.createElement('div');
+ el.className='toast align-items-center border-0 '+(type==='err'?'text-bg-danger':type==='warn'?'text-bg-warning':'text-bg-dark');
+ el.setAttribute('role','alert');
+ el.innerHTML='<div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button></div>';
+ el.querySelector('.toast-body').textContent=msg;
+ $('#toasts').appendChild(el);
+ el.addEventListener('hidden.bs.toast',()=>el.remove());
+ new bootstrap.Toast(el,{delay:2800}).show();
+}
+let _bsModal=null;
+function openModal(html,opts){
+ opts=opts||{};
+ const dlg=document.getElementById('appModalDialog');
+ dlg.classList.toggle('modal-lg',!!opts.wide);
+ document.getElementById('appModalContent').innerHTML=html;
+ if(!_bsModal)_bsModal=new bootstrap.Modal(document.getElementById('appModal'));
+ _bsModal.show();
+}
+function closeModal(){if(_bsModal)_bsModal.hide();}
+function switchTab(t){
+ const btn=document.querySelector('.rifa-tabs .nav-link[data-bs-target="#tab-'+t+'"]');
+ if(btn)btn.click();
+}
+
+/* Confirmación (overlay propio, funciona por encima del modal de Bootstrap) */
+let _confirmRes=null;
+document.addEventListener('keydown',function(e){
+ if(e.key==='Escape'&&_confirmRes){const r=_confirmRes;_confirmRes=null;$('#confirmRoot').innerHTML='';r(false);}
+});
+function confirmDialog(o){
+ return new Promise(function(resolve){
+  _confirmRes=resolve;
+  $('#confirmRoot').innerHTML=
+   '<div class="confirm-overlay"><div class="confirm-box">'+
+   '<div class="p-3 border-bottom d-flex justify-content-between align-items-center"><span class="fw-bold">'+esc(o.title||'¿Confirmar?')+'</span><button type="button" class="btn-close" id="cdX" aria-label="Cerrar"></button></div>'+
+   '<div class="p-3" style="font-size:.9rem;line-height:1.6">'+o.msg+'</div>'+
+   '<div class="p-3 border-top d-flex justify-content-end gap-2"><button type="button" class="btn btn-outline-secondary" id="cdNo">Cancelar</button><button type="button" class="btn '+(o.danger?'btn-danger':'btn-primary')+'" id="cdYes">'+esc(o.ok||'Confirmar')+'</button></div>'+
+   '</div></div>';
+  const done=v=>{_confirmRes=null;$('#confirmRoot').innerHTML='';resolve(v);};
+  $('#cdX').onclick=()=>done(false);
+  $('#cdNo').onclick=()=>done(false);
+  $('#cdYes').onclick=()=>done(true);
+ });
+}
+
+/* ==================== Renderizado ==================== */
+function renderHeader(){
+ const c=state.config;const t=totals();
+ $('#hTitle').textContent=c.title;
+ const bits=['🤝 Beneficiario: '+(c.beneficiary||'—')];
+ if(+c.prize>0)bits.push('🏆 Premio $'+fmtNum(c.prize,0));
+ bits.push('🎫 Número '+fmtUSD(c.price));
+ bits.push('📅 Sorteo '+(c.drawDate?fmtDate(c.drawDate):'por anunciar'));
+ $('#hSub').textContent=bits.join(' · ');
+ $('#hsSold').textContent=t.sold+'/'+c.totalNumbers;
+ $('#hsCollected').textContent=fmtUSD(t.collected);
+ $('#hsPending').textContent=fmtUSD(t.pending);
+}
+
+let gridFilter='all';
+function renderGrid(){
+ const c=statusCounts();
+ $('#welcomeHint').style.display=Object.keys(state.assignments).length?'none':'block';
+ let h='';
+ for(let n=1;n<=state.config.totalNumbers;n++){
+  const st=statusOf(n);
+  const a=state.assignments[String(n)];
+  const p=a?personById(a.personId):null;
+  let title='Nº '+n+' — '+ST[st];
+  if(a)title+=' — '+(p?p.name:'?')+' ('+fmtUSD(paidOf(String(n)))+' de '+fmtUSD(price())+')';
+  const dim=gridFilter!=='all'&&st!==gridFilter;
+  h+='<button type="button" class="num num-'+st+(dim?' num-dim':'')+'" data-n="'+n+'" title="'+esc(title)+'">'+n+'</button>';
+ }
+ $('#grid').innerHTML=h;
+ $('#gridCounts').innerHTML='<span>🎫 Vendidos: <b>'+(c.reserved+c.partial+c.paid)+'</b></span><span>✅ Pagados: <b>'+c.paid+'</b></span><span>🟠 Abonados: <b>'+c.partial+'</b></span><span>⏳ Reservados: <b>'+c.reserved+'</b></span><span>🆓 Disponibles: <b>'+c.free+'</b></span>';
+ $$('#legend .fbtn').forEach(el=>el.classList.toggle('active',el.dataset.f===gridFilter));
+}
+
+function renderPersons(){
+ const q=($('#personSearch').value||'').trim().toLowerCase();
+ const list=state.persons.filter(p=>!q||p.name.toLowerCase().includes(q)||(p.phone||'').toLowerCase().includes(q));
+ $('#personCount').textContent=state.persons.length;
+ $('#personList').innerHTML=list.length?list.map(p=>{
+  const s=personStats(p.id);
+  const chips=s.nums.map(n=>'<span class="chip chip-'+statusOf(n)+'" onclick="openNumberModal('+n+')" title="'+ST[statusOf(n)]+'">'+n+'</span>').join('');
+  return '<div class="card pcard">'+
+   '<div class="card-body py-3">'+
+    '<div class="d-flex align-items-center gap-2 mb-2" style="cursor:pointer" onclick="openPersonModal(\''+p.id+'\')">'+
+     '<div class="avatar">'+esc(initials(p.name))+'</div>'+
+     '<div style="min-width:0"><div class="fw-bold text-truncate">'+esc(p.name)+'</div><div class="text-muted" style="font-size:.75rem">'+esc(p.phone||'sin teléfono')+'</div></div>'+
+    '</div>'+
+    '<div class="d-flex flex-wrap gap-1 mb-2" style="min-height:26px">'+(chips||'<span class="text-muted" style="font-size:.75rem">Sin números</span>')+'</div>'+
+    '<div class="d-flex flex-wrap gap-3 mb-2" style="font-size:.78rem">'+
+     '<span class="text-muted"><i class="bi bi-ticket-perforated me-1"></i>'+s.nums.length+' nº</span>'+
+     '<span class="v-green fw-bold"><i class="bi bi-check2-circle me-1"></i>'+fmtUSD(s.paid)+'</span>'+
+     '<span class="'+(s.pending>0.004?'text-warn-t fw-bold':'text-muted')+'"><i class="bi bi-hourglass-split me-1"></i>'+fmtUSD(s.pending)+'</span>'+
+    '</div>'+
+    '<div class="d-flex flex-wrap gap-2">'+
+     '<button class="btn btn-sm btn-soft" type="button" onclick="openPaymentModal({personId:\''+p.id+'\'})"><i class="bi bi-cash-coin me-1"></i>Pago</button>'+
+     '<button class="btn btn-sm btn-soft" type="button" onclick="openBulkModal(\''+p.id+'\')"><i class="bi bi-plus-lg me-1"></i>Números</button>'+
+     '<button class="btn btn-sm btn-soft" type="button" onclick="openPersonModal(\''+p.id+'\')"><i class="bi bi-eye me-1"></i>Ver</button>'+
+    '</div>'+
+   '</div></div>';
+ }).join(''):'<div class="empty">'+(q?'Sin resultados para «'+esc(q)+'»':'Todavía no hay personas. Ve a <b>Números</b> y toca un número disponible para asignarlo (podrás crear la persona allí mismo), o usa la asignación rápida.')+'</div>';
+}
+
+function renderPayments(){
+ const selP=$('#pfPerson');const prev=selP.value;
+ selP.innerHTML='<option value="">Todas las personas</option>'+state.persons.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('');
+ if(prev&&state.persons.some(p=>p.id===prev))selP.value=prev;
+ const fp=selP.value,fm=$('#pfMethod').value,fq=$('#pfSearch').value.trim().toLowerCase();
+ let list=state.payments.slice().sort((a,b)=>{const d=String(b.date||'').localeCompare(String(a.date||''));return d!==0?d:String(b.createdAt||'').localeCompare(String(a.createdAt||''));});
+ if(fp)list=list.filter(p=>p.personId===fp);
+ if(fm)list=list.filter(p=>p.method===fm);
+ if(fq)list=list.filter(p=>{const per=personById(p.personId);return ((per?per.name:'')+' '+(p.reference||'')+' '+(p.note||'')+' '+(p.receivedBy||'')).toLowerCase().includes(fq);});
+ const total=round2(list.reduce((s,p)=>s+(Number(p.amountUSD)||0),0));
+ $('#payTotal').innerHTML='<b>'+list.length+'</b> pago(s) · Total: <b>'+fmtUSD(total)+'</b> USD';
+ $('#payTable').innerHTML=list.length?'<div class="table-responsive"><table class="table table-sm align-middle mb-0"><thead><tr><th>Fecha</th><th>Persona</th><th>Nº</th><th>Método</th><th>Monto</th><th>USD</th><th>Referencia</th><th class="text-end"></th></tr></thead><tbody>'+
+  list.map(x=>{
+   const per=personById(x.personId);
+   const nums=(x.numbers||[]).join(', ');
+   const allocStr=Object.keys(x.allocations||{}).map(n=>'Nº'+n+': '+fmtUSD(x.allocations[n])).join(' · ');
+   return '<tr>'+
+    '<td class="text-nowrap">'+fmtDate(x.date)+'</td>'+
+    '<td class="fw-bold">'+esc(per?per.name:'(eliminada)')+'</td>'+
+    '<td>'+esc(nums)+'</td>'+
+    '<td class="text-nowrap">'+METHODS[x.method].icon+' '+METHODS[x.method].short+'</td>'+
+    '<td class="text-nowrap">'+fmtAmount(x)+((x.method==='pagoMovil'||x.method==='cop')?'<br><small class="text-muted">tasa '+fmtNum(x.rate,x.method==='cop'?0:2)+'</small>':'')+'</td>'+
+    '<td><b>'+fmtUSD(x.amountUSD)+'</b>'+(allocStr?'<br><small class="text-muted">'+esc(allocStr)+'</small>':'')+'</td>'+
+    '<td>'+esc(x.reference||'—')+(x.receivedBy?'<br><small class="text-muted">recibió: '+esc(x.receivedBy)+'</small>':'')+(x.note?'<br><small class="text-muted">'+esc(x.note)+'</small>':'')+'</td>'+
+    '<td class="text-end text-nowrap">'+
+     '<button class="btn btn-sm btn-soft" type="button" title="Editar" onclick="openPaymentModal({editId:\''+x.id+'\'})"><i class="bi bi-pencil"></i></button> '+
+     '<button class="btn btn-sm btn-soft text-danger" type="button" title="Eliminar" onclick="delPayment(\''+x.id+'\')"><i class="bi bi-trash"></i></button>'+
+    '</td></tr>';
+  }).join('')+'</tbody></table></div>':'<div class="empty">No hay pagos que coincidan con el filtro.</div>';
+}
+
+function renderDraw(){
+ const d=state.draw;const c=statusCounts();
+ if(d){
+  $('#drawBox').innerHTML='<div class="winner">🎉 NÚMERO GANADOR 🎉<b>'+d.number+'</b>'+esc(d.holder||'—')+' · sorteado el '+fmtDate(d.at)+' · entre '+(d.pool||'?')+' números pagados<div class="mt-2"><button class="btn btn-sm fw-bold" style="background:rgba(120,53,15,.15);color:#78350f" type="button" onclick="drawWinner()"><i class="bi bi-arrow-repeat me-1"></i>Sortear de nuevo</button></div></div>';
+ }else{
+  $('#drawBox').innerHTML='<div class="card mb-3"><div class="card-body text-center"><p class="hint mb-2">El sorteo elige al azar un número entre los <b>'+c.paid+' pagados</b> (en este momento).</p><button class="btn btn-gold" type="button" '+(c.paid?'':'disabled')+' onclick="drawWinner()"><i class="bi bi-shuffle me-1"></i> Realizar sorteo</button></div></div>';
+ }
+}
+
+function renderSummary(){
+ const c=statusCounts();const t=totals();const cf=state.config;
+ renderDraw();
+ const stat=(ic,k,v,k2,cls)=>'<div class="col"><div class="card stat-card h-100"><div class="card-body p-3"><div class="k1"><i class="bi '+ic+' me-1"></i>'+k+'</div><div class="v '+(cls||'')+'">'+v+'</div><div class="k2">'+k2+'</div></div></div></div>';
+ $('#sumStats').innerHTML=
+  stat('bi-cash-coin','Recaudado',fmtUSD(t.collected),'de '+fmtUSD(t.expected)+' esperados','v-gold')+
+  stat('bi-hourglass-split','Por cobrar',fmtUSD(t.pending),'de números vendidos','v-red')+
+  stat('bi-ticket-perforated','Vendidos',t.sold+'/'+cf.totalNumbers,Math.round((t.sold/cf.totalNumbers)*100)+'% del tablero','v-blue')+
+  stat('bi-check2-circle','Pagados',c.paid,'números completos','v-green')+
+  stat('bi-circle-half','Abonados',c.partial,'pago parcial','v-orange')+
+  stat('bi-bookmark','Reservados',c.reserved,'sin abonar','')+
+  stat('bi-plus-circle','Disponibles',c.free,'por vender','');
+ const pct=(a,b)=>b>0?Math.min(100,(a/b)*100):0;
+ $('#barSold').style.width=pct(t.sold,cf.totalNumbers)+'%';
+ $('#barPaid').style.width=pct(c.paid,cf.totalNumbers)+'%';
+ $('#barColl').style.width=pct(t.collected,t.expected)+'%';
+ $('#lblSold').textContent=t.sold+' / '+cf.totalNumbers;
+ $('#lblPaid').textContent=c.paid+' / '+cf.totalNumbers;
+ $('#lblColl').textContent=fmtUSD(t.collected)+' / '+fmtUSD(t.expected);
+ $('#sumMethods').innerHTML=Object.keys(METHODS).map(k=>{
+  const ps=state.payments.filter(x=>x.method===k);
+  const usd=round2(ps.reduce((s,x)=>s+(Number(x.amountUSD)||0),0));
+  return '<div class="mrow"><span>'+METHODS[k].icon+' '+METHODS[k].label+'</span><span><b>'+fmtUSD(usd)+'</b> <small class="text-muted">('+ps.length+')</small></span></div>';
+ }).join('')||'<div class="empty">Sin pagos aún.</div>';
+ const rows=state.persons.map(p=>({p:p,s:personStats(p.id)})).filter(x=>x.s.nums.length>0);
+ $('#sumPersons').innerHTML=rows.length?'<div class="table-responsive"><table class="table table-sm table-hover align-middle mb-0"><thead><tr><th>Persona</th><th>Nº</th><th class="text-end">Pagado</th><th class="text-end">Pendiente</th></tr></thead><tbody>'+
+  rows.map(x=>'<tr style="cursor:pointer" onclick="openPersonModal(\''+x.p.id+'\')"><td class="fw-bold">'+esc(x.p.name)+'</td><td>'+x.s.nums.length+'</td><td class="text-end v-green">'+fmtUSD(x.s.paid)+'</td><td class="text-end fw-bold '+(x.s.pending>0.004?'text-warn-t':'v-green')+'">'+fmtUSD(x.s.pending)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty">Aún no hay números asignados.</div>';
+ const recent=state.payments.slice().sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,8);
+ $('#sumRecent').innerHTML=recent.length?recent.map(x=>{
+  const per=personById(x.personId);
+  return '<div class="pi"><div>'+METHODS[x.method].icon+' <b>'+esc(per?per.name:'—')+'</b> · Nº '+(x.numbers||[]).join(', ')+'</div><div class="text-end"><b>'+fmtAmount(x)+'</b> <small class="text-muted">('+fmtUSD(x.amountUSD)+')</small><br><small class="text-muted">'+fmtDate(x.date)+'</small></div></div>';
+ }).join(''):'<div class="empty">Sin movimientos aún.</div>';
+}
+
+function renderAll(){renderHeader();renderGrid();renderPersons();renderPayments();renderSummary();}
+
+/* ==================== Números ==================== */
+function personSelectHtml(id,ph){
+ return '<select class="form-select" id="'+id+'"><option value="">'+esc(ph)+'</option>'+state.persons.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('')+'<option value="__new">➕ Nueva persona…</option></select>';
+}
+
+function openNumberModal(n){
+ const k=String(n);
+ const a=state.assignments[k];
+ if(!a){
+  openModal(
+   '<div class="modal-header"><h5 class="modal-title"><i class="bi bi-ticket-perforated me-1"></i>Nº '+n+' — Disponible</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+   '<div class="modal-body">'+
+    '<label class="form-label mt-1" for="nmPerson">¿Quién eligió este número? *</label>'+
+    personSelectHtml('nmPerson','— Selecciona una persona —')+
+    '<div id="nmNewBox" class="d-none">'+
+     '<label class="form-label mt-3" for="nmName">Nombre de la nueva persona *</label><input class="form-control" id="nmName" placeholder="Ej: María Pérez">'+
+     '<label class="form-label mt-2" for="nmPhone">Teléfono (opcional)</label><input class="form-control" id="nmPhone" placeholder="Ej: 0414-1234567">'+
+    '</div>'+
+    '<label class="form-label mt-3" for="nmNote">Nota (opcional)</label><input class="form-control" id="nmNote" placeholder="Ej: pagó la mitad, falta el resto">'+
+   '</div>'+
+   '<div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-gold" id="nmSave"><i class="bi bi-check2-circle me-1"></i>Reservar Nº '+n+'</button></div>');
+  const sel=$('#nmPerson');
+  sel.addEventListener('change',()=>{$('#nmNewBox').classList.toggle('d-none',sel.value!=='__new');});
+  $('#nmSave').addEventListener('click',()=>{
+   let pid=sel.value;
+   if(pid==='__new'){
+    const name=$('#nmName').value.trim();
+    if(!name){toast('Escribe el nombre de la persona','err');return;}
+    const np={id:uid(),name:name,phone:$('#nmPhone').value.trim(),note:'',createdAt:new Date().toISOString()};
+    state.persons.push(np);pid=np.id;
+   }
+   if(!pid){toast('Selecciona o crea una persona','err');return;}
+   state.assignments[k]={personId:pid,at:new Date().toISOString(),note:$('#nmNote').value.trim()};
+   save();renderAll();closeModal();
+   toast('Nº '+n+' reservado para '+personById(pid).name);
+  });
+  return;
+ }
+ const p=personById(a.personId);
+ const pd=paidOf(k);
+ const pend=round2(price()-pd);
+ const pays=state.payments.filter(x=>x.allocations&&x.allocations[k]).sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')));
+ const payRows=pays.length?pays.map(x=>
+  '<div class="pi">'+
+   '<div><b>'+METHODS[x.method].icon+' '+fmtAmount(x)+'</b> <span class="text-muted">→ '+fmtUSD(x.allocations[k])+' a este número</span><br>'+
+   '<small class="text-muted"><i class="bi bi-calendar3 me-1"></i>'+fmtDate(x.date)+(x.reference?' · ref '+esc(x.reference):'')+(x.receivedBy?' · recibió '+esc(x.receivedBy):'')+'</small></div>'+
+   '<div class="text-nowrap"><button class="btn btn-sm btn-soft" type="button" onclick="openPaymentModal({editId:\''+x.id+'\'})"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm btn-soft text-danger" type="button" onclick="delPayment(\''+x.id+'\')"><i class="bi bi-trash"></i></button></div>'+
+  '</div>').join(''):'<div class="empty">Sin pagos registrados aún.</div>';
+ openModal(
+  '<div class="modal-header"><h5 class="modal-title"><i class="bi bi-ticket-perforated-fill me-1"></i>Nº '+n+'</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+  '<div class="modal-body">'+
+   (p?'<div class="kvrow"><span class="k">Persona</span><b><button type="button" class="btn btn-link btn-sm p-0 fw-bold" onclick="openPersonModal(\''+p.id+'\')">'+esc(p.name)+(p.phone?' · '+esc(p.phone):'')+'</button></b></div>'
+     :'<div class="kvrow"><span class="k">Persona</span><b class="text-danger">No encontrada</b></div>')+
+   '<div class="kvrow"><span class="k">Estado</span>'+badge(statusOf(n))+'</div>'+
+   '<div class="kvrow"><span class="k">Pagado</span><b>'+fmtUSD(pd)+' de '+fmtUSD(price())+'</b></div>'+
+   (price()>0?'<div class="progress my-1" style="height:.55rem"><div class="progress-bar pbar-blue" style="width:'+Math.min(100,(pd/price())*100)+'%"></div></div>':'')+
+   '<div class="kvrow"><span class="k">Pendiente</span><b class="'+(pend>0.004?'text-warn-t':'v-green')+'">'+fmtUSD(Math.max(0,pend))+'</b></div>'+
+   '<div class="kvrow"><span class="k">Reservado el</span><b>'+fmtDate(a.at)+'</b></div>'+
+   (a.note?'<div class="kvrow"><span class="k">Nota</span><b>'+esc(a.note)+'</b></div>':'')+
+   '<label class="form-label mt-3">Pagos / abonos de este número</label>'+payRows+
+  '</div>'+
+  '<div class="modal-footer">'+
+   '<button type="button" class="btn btn-outline-danger" onclick="freeNumber('+n+')"><i class="bi bi-arrow-counterclockwise me-1"></i>Liberar</button>'+
+   (p?'<button type="button" class="btn btn-soft" onclick="openBulkModal(\''+p.id+'\')"><i class="bi bi-plus-lg me-1"></i>Otro nº</button>'+
+   '<button type="button" class="btn btn-gold" onclick="openPaymentModal({personId:\''+p.id+'\',numbers:['+n+']})"><i class="bi bi-cash-coin me-1"></i>Registrar pago</button>':'')+
+  '</div>');
+}
+
+async function freeNumber(n){
+ const k=String(n);
+ const a=state.assignments[k];if(!a)return;
+ const p=personById(a.personId);
+ const pays=state.payments.filter(x=>x.allocations&&x.allocations[k]);
+ let msg='¿Liberar el Nº '+n+' de <b>'+esc(p?p.name:'?')+'</b>? El número volverá a estar disponible.';
+ if(pays.length)msg+='<br><br>⚠️ Este número tiene <b>'+pays.length+' pago(s) asociado(s)</b> que también se <b>eliminarán</b> (si un pago cubría varios números, se eliminará completo).';
+ const ok=await confirmDialog({title:'Liberar número',msg:msg,danger:true,ok:'Sí, liberar'});
+ if(!ok)return;
+ delete state.assignments[k];
+ const ids=new Set(pays.map(x=>x.id));
+ state.payments=state.payments.filter(x=>!ids.has(x.id));
+ save();renderAll();closeModal();toast('Nº '+n+' liberado');
+}
+
+function openBulkModal(personId){
+ openModal(
+  '<div class="modal-header"><h5 class="modal-title"><i class="bi bi-lightning-charge me-1"></i>Asignación rápida de números</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+  '<div class="modal-body">'+
+   '<label class="form-label mt-1" for="bmPerson">Persona *</label>'+personSelectHtml('bmPerson','— Selecciona una persona —')+
+   '<div id="bmNewBox" class="d-none">'+
+    '<label class="form-label mt-3" for="bmName">Nombre de la nueva persona *</label><input class="form-control" id="bmName" placeholder="Ej: María Pérez">'+
+    '<label class="form-label mt-2" for="bmPhone">Teléfono (opcional)</label><input class="form-control" id="bmPhone">'+
+   '</div>'+
+   '<label class="form-label mt-3" for="bmNums">Números *</label><input class="form-control" id="bmNums" placeholder="Ej: 1, 5, 10-15, 22, 40">'+
+   '<div class="hint mt-1">Separa con comas. Puedes usar rangos: 10-15. Los números ya ocupados se ignoran.</div>'+
+  '</div>'+
+  '<div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-gold" id="bmSave"><i class="bi bi-check2-circle me-1"></i>Asignar</button></div>');
+ const sel=$('#bmPerson');
+ if(personId&&state.persons.some(p=>p.id===personId))sel.value=personId;
+ sel.addEventListener('change',()=>{$('#bmNewBox').classList.toggle('d-none',sel.value!=='__new');});
+ $('#bmSave').addEventListener('click',()=>{
+  let pid=sel.value;
+  if(pid==='__new'){
+   const name=$('#bmName').value.trim();
+   if(!name){toast('Escribe el nombre de la persona','err');return;}
+   const np={id:uid(),name:name,phone:$('#bmPhone').value.trim(),note:'',createdAt:new Date().toISOString()};
+   state.persons.push(np);pid=np.id;
+  }
+  if(!pid){toast('Selecciona o crea una persona','err');return;}
+  const nums=parseNumbers($('#bmNums').value,state.config.totalNumbers);
+  if(!nums.length){toast('No se detectaron números válidos','err');return;}
+  const taken=[],done=[];
+  for(const n of nums){const kk=String(n);if(state.assignments[kk])taken.push(n);else{state.assignments[kk]={personId:pid,at:new Date().toISOString()};done.push(n);}}
+  save();renderAll();closeModal();
+  const takenTxt=taken.length>15?taken.length+' números':taken.join(', ');
+  toast('✅ '+done.length+' número(s) asignados'+(taken.length?' · ⚠️ ya ocupados: '+takenTxt:''));
+ });
+}
+
+/* ==================== Personas ==================== */
+function newPersonModal(){
+ openModal(
+  '<div class="modal-header"><h5 class="modal-title"><i class="bi bi-person-plus me-1"></i>Nueva persona</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+  '<div class="modal-body">'+
+   '<label class="form-label mt-1" for="npName">Nombre y apellido *</label><input class="form-control" id="npName" placeholder="Ej: María Pérez">'+
+   '<label class="form-label mt-2" for="npPhone">Teléfono (opcional)</label><input class="form-control" id="npPhone" placeholder="Ej: 0414-1234567">'+
+   '<label class="form-label mt-2" for="npNote">Nota (opcional)</label><input class="form-control" id="npNote" placeholder="Ej: vecina del 3er piso">'+
+  '</div>'+
+  '<div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-gold" id="npSave"><i class="bi bi-check2-circle me-1"></i>Guardar persona</button></div>');
+ $('#npSave').addEventListener('click',()=>{
+  const name=$('#npName').value.trim();
+  if(!name){toast('El nombre es obligatorio','err');return;}
+  state.persons.push({id:uid(),name:name,phone:$('#npPhone').value.trim(),note:$('#npNote').value.trim(),createdAt:new Date().toISOString()});
+  save();renderAll();closeModal();toast('Persona agregada ✅');
+ });
+}
+
+function editPerson(id){
+ const p=personById(id);if(!p)return;
+ openModal(
+  '<div class="modal-header"><h5 class="modal-title"><i class="bi bi-pencil me-1"></i>Editar persona</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+  '<div class="modal-body">'+
+   '<label class="form-label mt-1" for="epName">Nombre *</label><input class="form-control" id="epName" value="'+esc(p.name)+'">'+
+   '<label class="form-label mt-2" for="epPhone">Teléfono</label><input class="form-control" id="epPhone" value="'+esc(p.phone||'')+'">'+
+   '<label class="form-label mt-2" for="epNote">Nota</label><input class="form-control" id="epNote" value="'+esc(p.note||'')+'">'+
+  '</div>'+
+  '<div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" id="epSave"><i class="bi bi-save me-1"></i>Guardar</button></div>');
+ $('#epSave').addEventListener('click',()=>{
+  const name=$('#epName').value.trim();
+  if(!name){toast('El nombre es obligatorio','err');return;}
+  p.name=name;p.phone=$('#epPhone').value.trim();p.note=$('#epNote').value.trim();
+  save();renderAll();closeModal();toast('Persona actualizada ✅');
+ });
+}
+
+async function delPerson(id){
+ const p=personById(id);if(!p)return;
+ const s=personStats(id);
+ const nPays=paymentsOfPerson(id).length;
+ const ok=await confirmDialog({title:'Eliminar persona',danger:true,ok:'Eliminar',
+  msg:'Se eliminará a <b>'+esc(p.name)+'</b>, sus <b>'+s.nums.length+' número(s)</b> quedarán libres y se borrarán <b>'+nPays+' pago(s)</b> ('+fmtUSD(s.paid)+' registrados). Esta acción no se puede deshacer.'});
+ if(!ok)return;
+ state.persons=state.persons.filter(x=>x.id!==id);
+ for(const kk of Object.keys(state.assignments))if(state.assignments[kk].personId===id)delete state.assignments[kk];
+ state.payments=state.payments.filter(x=>x.personId!==id);
+ save();renderAll();closeModal();toast('Persona eliminada');
+}
+
+function openPersonModal(id){
+ const p=personById(id);if(!p)return;
+ const s=personStats(id);
+ const chips=s.nums.length?s.nums.map(n=>{
+  const st=statusOf(n);const pd=paidOf(String(n));
+  const extra=st==='partial'?' <small>('+fmtUSD(pd)+'/'+fmtUSD(price())+')</small>':'';
+  return '<span class="chip chip-'+st+'" title="'+ST[st]+'" onclick="openNumberModal('+n+')">'+(st==='paid'?'✅':st==='partial'?'🟠':'⏳')+' '+n+extra+'</span>';
+ }).join(''):'<span class="text-muted" style="font-size:.8rem">Sin números asignados</span>';
+ const pays=paymentsOfPerson(id).slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+ const payRows=pays.length?pays.map(x=>
+  '<div class="pi">'+
+   '<div><b>'+METHODS[x.method].icon+' '+fmtAmount(x)+'</b> <span class="text-muted">≈ '+fmtUSD(x.amountUSD)+' · Nº '+(x.numbers||[]).join(', ')+'</span><br>'+
+   '<small class="text-muted"><i class="bi bi-calendar3 me-1"></i>'+fmtDate(x.date)+(x.reference?' · ref: '+esc(x.reference):'')+(x.receivedBy?' · recibió: '+esc(x.receivedBy):'')+(x.note?' · 📝 '+esc(x.note):'')+'</small></div>'+
+   '<div class="text-nowrap"><button class="btn btn-sm btn-soft" type="button" onclick="openPaymentModal({editId:\''+x.id+'\'})"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm btn-soft text-danger" type="button" onclick="delPayment(\''+x.id+'\')"><i class="bi bi-trash"></i></button></div>'+
+  '</div>').join(''):'<div class="empty">Sin pagos registrados aún.</div>';
+ openModal(
+  '<div class="modal-header"><h5 class="modal-title"><i class="bi bi-person-circle me-1"></i>'+esc(p.name)+'</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+  '<div class="modal-body">'+
+   '<div class="kvrow"><span class="k">Teléfono</span><b>'+esc(p.phone||'—')+'</b></div>'+
+   (p.note?'<div class="kvrow"><span class="k">Nota</span><b>'+esc(p.note)+'</b></div>':'')+
+   '<div class="balance-box">'+
+    '<div><span class="k">Números</span><b>'+s.nums.length+'</b></div>'+
+    '<div><span class="k">Total</span><b>'+fmtUSD(s.total)+'</b></div>'+
+    '<div><span class="k">Pagado</span><b class="v-green">'+fmtUSD(s.paid)+'</b></div>'+
+    '<div><span class="k">Pendiente</span><b class="'+(s.pending>0.004?'text-warn-t':'v-green')+'">'+fmtUSD(s.pending)+'</b></div>'+
+   '</div>'+
+   '<label class="form-label">Sus números (toca para ver el detalle)</label><div class="d-flex flex-wrap gap-1 mb-2">'+chips+'</div>'+
+   '<label class="form-label">Historial de pagos</label>'+payRows+
+   '<div class="text-end mt-1"><button type="button" class="btn btn-link btn-sm p-0" onclick="copyPersonStatement(\''+id+'\')"><i class="bi bi-clipboard me-1"></i>Copiar estado de cuenta (para WhatsApp)</button></div>'+
+  '</div>'+
+  '<div class="modal-footer">'+
+   '<button type="button" class="btn btn-outline-danger" onclick="delPerson(\''+id+'\')"><i class="bi bi-trash me-1"></i>Eliminar</button>'+
+   '<button type="button" class="btn btn-soft" onclick="editPerson(\''+id+'\')"><i class="bi bi-pencil me-1"></i>Editar</button>'+
+   '<button type="button" class="btn btn-soft" onclick="openBulkModal(\''+id+'\')"><i class="bi bi-plus-lg me-1"></i>Números</button>'+
+   '<button type="button" class="btn btn-gold" onclick="openPaymentModal({personId:\''+id+'\'})"><i class="bi bi-cash-coin me-1"></i>Registrar pago</button>'+
+  '</div>',{wide:true});
+}
+
+function personStatementText(id){
+ const p=personById(id);if(!p)return '';
+ const s=personStats(id);
+ const lines=['🧾 *ESTADO DE CUENTA — '+p.name+'*',state.config.title+' — '+(state.config.beneficiary||''),''];
+ if(s.nums.length){
+  lines.push('🎫 Números: '+s.nums.map(n=>{
+   const st=statusOf(n);const pd=paidOf(String(n));
+   return st==='paid'?n+'✅':st==='partial'?n+'🟠('+fmtUSD(pd)+'/'+fmtUSD(price())+')':n+'⏳';
+  }).join(', '));
+ }
+ lines.push('💰 Total: '+fmtUSD(s.total)+' | Pagado: '+fmtUSD(s.paid)+' | *Pendiente: '+fmtUSD(s.pending)+'*','','💸 Pagos:');
+ const pays=paymentsOfPerson(id).slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+ if(!pays.length)lines.push('· (sin pagos aún)');
+ for(const x of pays)lines.push('· '+fmtDate(x.date)+' '+METHODS[x.method].short+' '+fmtAmount(x)+' ≈ '+fmtUSD(x.amountUSD)+(x.reference?' — ref '+x.reference:''));
+ return lines.join('\n');
+}
+async function copyPersonStatement(id){
+ const ok=await copyText(personStatementText(id));
+ if(ok)toast('Estado de cuenta copiado 📋');else toast('No se pudo copiar','err');
+}
+
+/* ==================== Pagos ==================== */
+function openPaymentModal(opts){
+ opts=opts||{};
+ const edit=opts.editId?paymentById(opts.editId):null;
+ if(!state.persons.length){toast('Primero asigna un número a alguna persona','warn');return;}
+ openModal(
+  '<div class="modal-header"><h5 class="modal-title"><i class="bi bi-cash-coin me-1"></i>'+(edit?'Editar pago':'Registrar pago / abono')+'</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+  '<div class="modal-body">'+
+   '<label class="form-label mt-1" for="pmPerson">Persona *</label>'+
+   '<select class="form-select" id="pmPerson">'+state.persons.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('')+'</select>'+
+   '<label class="form-label mt-3">Números a cubrir con este pago *</label>'+
+   '<div class="hint mb-1">El monto se aplicará en orden hasta completar cada número seleccionado.</div>'+
+   '<div class="chips-box" id="pmNums"></div>'+
+   '<div class="row g-2 mt-2">'+
+    '<div class="col-6"><label class="form-label" for="pmMethod">Método de pago *</label><select class="form-select" id="pmMethod">'+Object.keys(METHODS).map(k=>'<option value="'+k+'">'+METHODS[k].icon+' '+METHODS[k].label+'</option>').join('')+'</select></div>'+
+    '<div class="col-6"><label class="form-label" for="pmAmount">Monto (<span id="pmCur">USDT</span>) *</label><input class="form-control" id="pmAmount" type="number" step="any" min="0" inputmode="decimal" placeholder="0,00"></div>'+
+   '</div>'+
+   '<div class="hint mt-1" id="pmConv"></div>'+
+   '<button type="button" class="btn btn-link btn-sm p-0" id="pmFill"><i class="bi bi-calculator me-1"></i>Completar con el pendiente de los números seleccionados</button>'+
+   '<div class="row g-2 mt-1">'+
+    '<div class="col-sm-6"><label class="form-label" id="pmRefLabel" for="pmRef">Referencia</label><input class="form-control" id="pmRef"></div>'+
+    '<div class="col-sm-6"><label class="form-label" for="pmDate">Fecha *</label><input class="form-control" id="pmDate" type="date"></div>'+
+   '</div>'+
+   '<div class="row g-2">'+
+    '<div class="col-sm-6"><label class="form-label" for="pmBy">Recibido por (opcional)</label><input class="form-control" id="pmBy" placeholder="¿Quién recibió el dinero?"></div>'+
+    '<div class="col-sm-6"><label class="form-label" for="pmNote">Nota (opcional)</label><input class="form-control" id="pmNote"></div>'+
+   '</div>'+
+   '<div class="alloc d-none" id="pmAlloc"></div>'+
+  '</div>'+
+  '<div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-gold" id="pmSave"><i class="bi bi-check2-circle me-1"></i>'+(edit?'Guardar cambios':'Registrar pago')+'</button></div>',{wide:true});
+ let selNums=new Set(((edit?(edit.numbers||[]):(opts.numbers||[])).map(String)));
+ const personSel=$('#pmPerson');
+ let initPid=edit?edit.personId:(opts.personId||'');
+ if(!state.persons.some(p=>p.id===initPid))initPid=state.persons[0].id;
+ personSel.value=initPid;
+ $('#pmMethod').value=edit?edit.method:'binance';
+ if(edit)$('#pmAmount').value=edit.amount;
+ $('#pmRef').value=edit?(edit.reference||''):'';
+ $('#pmDate').value=edit?edit.date:todayISO();
+ $('#pmBy').value=edit?(edit.receivedBy||''):'';
+ $('#pmNote').value=edit?(edit.note||''):'';
+ const editId=edit?edit.id:null;
+ function curUSD(){
+  const m=$('#pmMethod').value;const amt=pnum($('#pmAmount').value);
+  if(m==='pagoMovil')return amt/(Number(state.config.rateBs)||1);
+  if(m==='cop')return amt/(Number(state.config.rateCop)||1);
+  return amt;
+ }
+ function selSorted(){
+  const owned=new Set(numbersOfPerson(personSel.value).map(String));
+  return Array.from(selNums).filter(n=>owned.has(n)).sort((a,b)=>Number(a)-Number(b));
+ }
+ function renderNums(){
+  const nums=numbersOfPerson(personSel.value).map(String);
+  $('#pmNums').innerHTML=nums.length?nums.map(n=>{
+   const pd=paidOf(n,editId);const st=statusOf(n);const pend=round2(price()-pd);
+   return '<button type="button" class="pick'+(selNums.has(n)?' on':'')+'" data-n="'+n+'">Nº '+n+' <small>'+(st==='paid'?'✔ pagado':'falta '+fmtUSD(pend))+'</small></button>';
+  }).join(''):'<span class="text-muted" style="font-size:.8rem;padding:.35rem;display:inline-block">Esta persona no tiene números asignados todavía.</span>';
+  $$('#pmNums .pick').forEach(b=>b.addEventListener('click',()=>{
+   const n=b.dataset.n;
+   if(selNums.has(n))selNums.delete(n);else selNums.add(n);
+   renderNums();refresh();
+  }));
+ }
+ function refresh(){
+  const mKey=$('#pmMethod').value;const m=METHODS[mKey];
+  $('#pmCur').textContent=m.cur;
+  $('#pmRefLabel').textContent=m.refLabel;
+  const amt=pnum($('#pmAmount').value);
+  let conv='';
+  if(mKey==='pagoMovil')conv='≈ '+fmtUSD(curUSD())+' · tasa '+fmtNum(state.config.rateBs,2)+' Bs/$';
+  else if(mKey==='cop')conv='≈ '+fmtUSD(curUSD())+' · tasa '+fmtNum(state.config.rateCop,0)+' COP/$';
+  $('#pmConv').textContent=conv||('Ingresa el monto recibido en '+m.cur+'.');
+  const nums=selSorted();
+  const box=$('#pmAlloc');
+  if(amt>0&&nums.length){
+   const usd=curUSD();
+   const r=computeAlloc(nums,usd,editId);
+   let h='<b>📂 Distribución del pago</b>';
+   for(const n of Object.keys(r.alloc)){
+    const npd=round2(paidOf(n,editId)+r.alloc[n]);
+    h+='<div class="arow"><span>Nº '+n+'</span><span>'+fmtUSD(r.alloc[n])+' → '+(npd>=price()-0.005?'✅ queda pagado':'🟠 abonado ('+fmtUSD(npd)+' de '+fmtUSD(price())+')')+'</span></div>';
+   }
+   if(r.rem>0.005)h+='<div class="arow warn"><span>⚠️ Excedente</span><span>'+fmtUSD(r.rem)+' por encima de lo pendiente (ajusta el monto)</span></div>';
+   box.classList.remove('d-none');box.innerHTML=h;
+  }else box.classList.add('d-none');
+ }
+ personSel.addEventListener('change',()=>{selNums=new Set();renderNums();refresh();});
+ $('#pmMethod').addEventListener('change',refresh);
+ $('#pmAmount').addEventListener('input',refresh);
+ $('#pmFill').addEventListener('click',()=>{
+  const nums=selSorted();
+  if(!nums.length){toast('Selecciona al menos un número','warn');return;}
+  const pend=nums.reduce((s,n)=>s+Math.max(0,round2(price()-paidOf(n,editId))),0);
+  const mKey=$('#pmMethod').value;let amt=round2(pend);
+  if(mKey==='pagoMovil')amt=round2(pend*(Number(state.config.rateBs)||1));
+  else if(mKey==='cop')amt=Math.round(pend*(Number(state.config.rateCop)||1));
+  $('#pmAmount').value=amt;refresh();
+ });
+ $('#pmSave').addEventListener('click',()=>{
+  const pid=personSel.value;const mKey=$('#pmMethod').value;
+  const amt=round2(pnum($('#pmAmount').value));
+  const nums=selSorted();
+  if(!nums.length){toast('Selecciona al menos un número','err');return;}
+  if(!(amt>0)){toast('Ingresa un monto mayor a 0','err');return;}
+  if(!$('#pmDate').value){toast('Selecciona la fecha','err');return;}
+  const usd=round2(curUSD());
+  const r=computeAlloc(nums,usd,editId);
+  if(r.rem>0.005){toast('El monto excede lo pendiente en '+fmtUSD(r.rem)+'. Ajusta el monto o los números.','err');return;}
+  if(!Object.keys(r.alloc).length){toast('Los números seleccionados ya están pagados','err');return;}
+  const rate=mKey==='pagoMovil'?Number(state.config.rateBs):mKey==='cop'?Number(state.config.rateCop):1;
+  const rec={id:edit?edit.id:uid(),personId:pid,numbers:nums,method:mKey,amount:amt,currency:METHODS[mKey].cur,rate:rate,amountUSD:usd,allocations:r.alloc,reference:$('#pmRef').value.trim(),date:$('#pmDate').value,receivedBy:$('#pmBy').value.trim(),note:$('#pmNote').value.trim(),createdAt:edit?edit.createdAt:new Date().toISOString()};
+  if(edit){const i=state.payments.findIndex(x=>x.id===edit.id);if(i>=0)state.payments[i]=rec;}else state.payments.push(rec);
+  save();renderAll();closeModal();
+  toast((edit?'Pago actualizado ✅ · ':'Pago registrado ✅ · ')+fmtAmount(rec)+' ≈ '+fmtUSD(usd));
+ });
+ renderNums();refresh();
+}
+
+async function delPayment(id){
+ const x=paymentById(id);if(!x)return;
+ const ok=await confirmDialog({title:'Eliminar pago',danger:true,ok:'Eliminar',
+  msg:'¿Eliminar el pago de <b>'+fmtUSD(x.amountUSD)+'</b> ('+METHODS[x.method].short+') del '+fmtDate(x.date)+'? Los números afectados volverán a quedar abonados o reservados.'});
+ if(!ok)return;
+ state.payments=state.payments.filter(p=>p.id!==id);
+ save();renderAll();closeModal();toast('Pago eliminado');
+}
+
+/* ==================== Sorteo ==================== */
+async function drawWinner(){
+ const c=statusCounts();
+ if(!c.paid){toast('No hay números pagados para sortear','warn');return;}
+ const ok=await confirmDialog({title:'Realizar sorteo',ok:'¡Sortear!',
+  msg:'Se elegirá 1 número al azar entre los <b>'+c.paid+' números pagados</b> y el resultado quedará registrado.'+(state.draw?'<br><br>⚠️ Esto reemplazará el resultado anterior.':'')});
+ if(!ok)return;
+ const pool=[];
+ for(let n=1;n<=state.config.totalNumbers;n++)if(statusOf(n)==='paid')pool.push(n);
+ if(!pool.length){toast('No hay números pagados','warn');return;}
+ const win=pool[Math.floor(Math.random()*pool.length)];
+ const asg=state.assignments[String(win)];
+ const holder=asg?personById(asg.personId):null;
+ state.draw={at:new Date().toISOString(),number:win,holder:holder?holder.name:'—',pool:pool.length};
+ save();renderAll();
+ openModal(
+  '<div class="modal-header border-0"><h5 class="modal-title w-100 text-center">🎉 ¡Tenemos ganador!</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>'+
+  '<div class="modal-body text-center pb-4">'+
+   '<div style="font-size:4.5rem;font-weight:900;color:#12296b;line-height:1">'+win+'</div>'+
+   '<div class="fs-5 mt-2 fw-bold">'+esc(holder?holder.name:'—')+'</div>'+
+   '<div class="text-muted small mt-1">Ganador entre '+pool.length+' números pagados · '+fmtDate(state.draw.at)+'</div>'+
+  '</div>'+
+  '<div class="modal-footer border-0 justify-content-center"><button type="button" class="btn btn-gold" data-bs-dismiss="modal">Cerrar</button></div>');
+}
+
+/* ==================== Ajustes ==================== */
+function syncSettingsForm(){
+ const c=state.config;
+ $('#cfTitle').value=c.title;
+ $('#cfBen').value=c.beneficiary||'';
+ $('#cfPrize').value=c.prize;
+ $('#cfPrice').value=c.price;
+ $('#cfTotal').value=c.totalNumbers;
+ $('#cfDate').value=c.drawDate||'';
+ $('#cfRateBs').value=c.rateBs;
+ $('#cfRateCop').value=c.rateCop;
+}
+function saveSettings(){
+ const title=$('#cfTitle').value.trim();
+ if(!title){toast('El título es obligatorio','err');return;}
+ const priceV=pnum($('#cfPrice').value);
+ const prizeV=pnum($('#cfPrize').value);
+ const totalV=Math.round(pnum($('#cfTotal').value));
+ const rateBs=pnum($('#cfRateBs').value);
+ const rateCop=pnum($('#cfRateCop').value);
+ if(!(priceV>0)){toast('El precio por número debe ser mayor a 0','err');return;}
+ if(!(totalV>=10&&totalV<=1000)){toast('La cantidad de números debe estar entre 10 y 1000','err');return;}
+ const assigned=Object.keys(state.assignments).map(Number);
+ const maxAssigned=assigned.length?Math.max.apply(null,assigned):0;
+ if(totalV<maxAssigned){toast('No puedes bajar la cantidad por debajo de '+maxAssigned+' (ya hay números asignados hasta el Nº '+maxAssigned+')','err');return;}
+ if(!(rateBs>0)||!(rateCop>0)){toast('Las tasas deben ser mayores a 0','err');return;}
+ state.config={title:title,beneficiary:$('#cfBen').value.trim(),prize:prizeV,price:priceV,totalNumbers:totalV,drawDate:$('#cfDate').value,rateBs:rateBs,rateCop:rateCop};
+ save();renderAll();syncSettingsForm();toast('Configuración guardada ✅');
+}
+
+/* ==================== Respaldo / exportación ==================== */
+function exportJSON(){
+ downloadBlob(JSON.stringify(state,null,2),'application/json','rifa-respaldo-'+todayISO()+'.json');
+ toast('Respaldo descargado 💾');
+}
+function importJSON(file){
+ const r=new FileReader();
+ r.onload=async function(){
+  try{
+   const s=JSON.parse(r.result);
+   if(!s||typeof s!=='object'||!s.config||!Array.isArray(s.persons)||!Array.isArray(s.payments)||typeof s.assignments!=='object')throw new Error('formato');
+   const ok=await confirmDialog({title:'Importar respaldo',danger:true,ok:'Reemplazar',
+    msg:'Se reemplazarán <b>TODOS</b> los datos actuales por los del respaldo:<br>· '+s.persons.length+' personas<br>· '+Object.keys(s.assignments||{}).length+' números asignados<br>· '+(s.payments||[]).length+' pagos'});
+   if(!ok)return;
+   state=normalize(s);save();renderAll();syncSettingsForm();switchTab('numeros');
+   toast('Respaldo importado ✅');
+  }catch(e){toast('Archivo inválido ❌','err');}
+ };
+ r.readAsText(file);
+}
+function exportCSV(){
+ if(!state.payments.length){toast('No hay pagos para exportar','warn');return;}
+ const rows=[['Fecha','Persona','Números','Método','Monto','Moneda','USD equivalente','Tasa usada','Referencia','Recibido por','Nota','Registrado']];
+ const list=state.payments.slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+ for(const x of list){
+  const per=personById(x.personId);
+  rows.push([x.date,per?per.name:'(eliminada)',(x.numbers||[]).join(' '),METHODS[x.method].label,x.amount,x.currency,x.amountUSD,x.rate,x.reference||'',x.receivedBy||'',x.note||'',x.createdAt||'']);
+ }
+ const csv='\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+ downloadBlob(csv,'text/csv;charset=utf-8','rifa-pagos-'+todayISO()+'.csv');
+ toast('Pagos exportados 📄');
+}
+function summaryText(){
+ const c=statusCounts();const t=totals();const cf=state.config;
+ const free=[];for(let n=1;n<=cf.totalNumbers;n++)if(statusOf(n)==='free')free.push(n);
+ const lines=[
+  '🎟️ *'+cf.title.toUpperCase()+'*',
+  '🤝 Beneficiario: '+(cf.beneficiary||'—'),
+  (+cf.prize>0?'🏆 Premio: $'+fmtNum(cf.prize,0)+' | ':'')+'🎫 Número: '+fmtUSD(cf.price),
+  '📅 Sorteo: '+(cf.drawDate?fmtDate(cf.drawDate):'por anunciar'),'',
+  '📊 *Vendidos: '+t.sold+'/'+cf.totalNumbers+'*',
+  '✅ Pagados: '+c.paid+' | 🟠 Abonados: '+c.partial+' | ⏳ Reservados: '+c.reserved,
+  '💰 Recaudado: *'+fmtUSD(t.collected)+'* de '+fmtUSD(t.expected),'',
+  '🆓 *Números disponibles ('+free.length+'):*',
+  free.length?free.join(', '):'(ninguno — ¡todo vendido!)'
+ ];
+ return lines.join('\n');
+}
+async function shareSummary(){
+ const ok=await copyText(summaryText());
+ if(ok)toast('Resumen copiado, pégalo en WhatsApp 📤');else toast('No se pudo copiar','err');
+}
+async function resetAll(){
+ const ok1=await confirmDialog({title:'⚠️ Borrar todos los datos',danger:true,ok:'Sí, borrar todo',
+  msg:'Se eliminarán <b>personas, números asignados, pagos y el sorteo</b>. Descarga un respaldo antes si quieres conservarlos. Esta acción no se puede deshacer.'});
+ if(!ok1)return;
+ const ok2=await confirmDialog({title:'Última confirmación',danger:true,ok:'Borrar definitivamente',msg:'¿Estás 100% seguro? Todo se perderá.'});
+ if(!ok2)return;
+ state=clone(DEFAULTS);save();renderAll();syncSettingsForm();toast('Datos borrados');
+}
+
+/* ==================== Init ==================== */
+function init(){
+ /* Pestañas Bootstrap */
+ $$('.rifa-tabs .nav-link').forEach(b=>b.addEventListener('shown.bs.tab',()=>window.scrollTo({top:0})));
+ const ajustesBtn=document.querySelector('.rifa-tabs .nav-link[data-bs-target="#tab-ajustes"]');
+ if(ajustesBtn)ajustesBtn.addEventListener('shown.bs.tab',syncSettingsForm);
+ /* Eventos */
+ $('#grid').addEventListener('click',e=>{const b=e.target.closest('.num');if(b)openNumberModal(parseInt(b.dataset.n,10));});
+ $$('#legend .fbtn').forEach(el=>el.addEventListener('click',()=>{gridFilter=el.dataset.f;renderGrid();}));
+ $('#personSearch').addEventListener('input',renderPersons);
+ $('#btnAddPerson').addEventListener('click',newPersonModal);
+ $('#btnBulk').addEventListener('click',()=>openBulkModal());
+ $('#btnAddPayment').addEventListener('click',()=>openPaymentModal({}));
+ $('#pfPerson').addEventListener('change',renderPayments);
+ $('#pfMethod').addEventListener('change',renderPayments);
+ $('#pfSearch').addEventListener('input',renderPayments);
+ $('#btnSaveCfg').addEventListener('click',saveSettings);
+ $('#btnExport').addEventListener('click',exportJSON);
+ $('#btnImport').addEventListener('click',()=>$('#impFile').click());
+ $('#impFile').addEventListener('change',e=>{const f=e.target.files[0];if(f)importJSON(f);e.target.value='';});
+ $('#btnCSV').addEventListener('click',exportCSV);
+ $('#btnShare').addEventListener('click',shareSummary);
+ $('#btnReset').addEventListener('click',resetAll);
+ syncSettingsForm();
+ renderAll();
+}
+init();
+</script>
+</body>
+</html>
